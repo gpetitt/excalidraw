@@ -1,0 +1,106 @@
+Prerequisites Installed & Versions
+Node.js: v18+ (installed v20.x LTS via Node installer)
+
+Yarn: v1.22.22 (installed globally via npm install -g yarn)
+
+Exact Commands Run (In Order)
+Verify system tools:
+
+DOS
+node -v
+Install Yarn globally:
+
+DOS
+npm install -g yarn
+Install project monorepo dependencies:
+
+DOS
+yarn
+Start the local Vite development server:
+
+DOS
+yarn start
+Open browser at http://localhost:3000
+
+Build Time
+Initial dependency installation (yarn): ~3 minutes (196.56 seconds)
+
+Server start (yarn start): ~5 seconds
+
+Issues Encountered & Solutions
+Issue 1: Missing System Tools (node, yarn, make unrecognized)
+
+Cause: Node.js and Yarn were not installed on the system.
+
+Solution: Downloaded and ran the Node.js LTS installer from nodejs.org, making sure "Add to PATH" was checked.
+
+Issue 2: Terminal environment variable caching
+
+Cause: VS Code's embedded terminal did not recognize node immediately after running the installer.
+
+Solution: Restarted VS Code completely to refresh system environment variables.
+
+Issue 3: PowerShell Script Execution Security Policy (PSSecurityException)
+
+Cause: Windows default security blocked npm.ps1 from running in PowerShell (npm install -g yarn).
+
+Solution: Switched the VS Code terminal profile from PowerShell to Command Prompt (cmd), which bypasses PowerShell execution policies.
+
+Issue 4: Unmet peer dependency and version resolution warnings during yarn
+
+Cause: Radix UI sub-packages flagged missing React 19 peer dependencies and strip-ansi resolution mismatches.
+
+Solution: Evaluated warnings as non-breaking monorepo peer notices and proceeded—no intervention required.
+
+Documentation Accuracy
+Accuracy: High (approx. 90% accurate).
+
+What worked: The standard commands (yarn followed by yarn start) match the repository's README.md exactly and build the application cleanly once prerequisites exist.
+
+What was missing/implicit:
+
+Assumes Node.js and Yarn are pre-installed without explicit version checks in the setup instructions.
+
+```mermaid
+classDiagram
+    class Board {
+        title
+        theme
+        gridType
+        exportFormat
+    }
+
+    class DiagramElement {
+        strokeStyle
+        strokeColor
+        fillColor
+        opacity
+        positionCoordinates
+    }
+
+    class Collaborator {
+        displayName
+        avatarColor
+        cursorPosition
+        permissionLevel
+    }
+
+    class Session {
+        sessionKey
+        isEncrypted
+        startTime
+        activeUserCount
+    }
+
+    class LibraryStencil {
+        stencilName
+        category
+        authorName
+    }
+
+    Collaborator "1" -- "1" Session : hosts
+    Collaborator "1..*" -- "1" Board : participatesIn
+    Session "1" -- "1" Board : synchronizes
+    Board "1" -- "0..*" DiagramElement : contains
+    Board "1" -- "0..*" LibraryStencil : utilizes
+    LibraryStencil "1" -- "0..*" DiagramElement : generates
