@@ -1,0 +1,147 @@
+# SSDs and Operation Contracts
+
+**CSCI 360: Software Architecture, Security, and Testing**  
+**Student Name:** Grant Petitt  
+**Date:** 10/5/2026  
+**Project:** Excalidraw
+
+---
+
+# Part 2: System Sequence Diagrams
+
+## SSD 1: Create System Architecture Diagram
+
+This SSD represents the main success scenario for creating elements on the Excalidraw canvas. The user selects a tool, creates and adjusts an element, completes it, and saves the scene.
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant S as :ExcalidrawSystem
+
+    User->>S: selectTool(toolType)
+    S-->>User: activeTool
+
+    loop for each element
+        User->>S: beginElement(toolType, startX, startY)
+        User->>S: updateElement(currentX, currentY)
+        S-->>User: updatedElementPreview
+        User->>S: finishElement(endX, endY)
+        S-->>User: completedElement
+    end
+
+    User->>S: saveScene()
+    S-->>User: sceneSaved
+```
+
+---
+
+## SSD 2: Export Canvas to PNG Image
+
+This SSD represents the main success scenario for exporting an Excalidraw canvas. The user begins the export process, selects the desired export settings, and exports the finished canvas as a PNG file.
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant S as :ExcalidrawSystem
+
+    User->>S: startExport()
+    S-->>User: exportPreview
+
+    User->>S: setExportOptions(background, scale, darkMode)
+    S-->>User: updatedPreview
+
+    User->>S: exportPNG()
+    S-->>User: pngFile
+```
+
+---
+
+## SSD 3: Collaborate in Live Room Session
+
+This SSD represents the main success scenario for starting and using a live collaboration session. The user starts a collaboration session, receives a room URL, and then makes changes that are synchronized through the session.
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant S as :ExcalidrawSystem
+
+    User->>S: openCollaboration()
+    S-->>User: collaborationOptions
+
+    User->>S: startSession()
+    S-->>User: roomURL
+
+    User->>S: editElement(elementId, changes)
+    S-->>User: synchronizedScene
+```
+
+---
+
+# Part 3: Operation Contracts
+
+## Contract 1: Finish Element
+
+**Operation:**  
+`finishElement(endX, endY)`
+
+**Cross-references:**  
+Use Case: Create System Architecture Diagram
+
+**Preconditions:**
+- A `Canvas` exists and is active.
+- An `Element` is currently being created.
+- The `Element` has a starting position and selected element type.
+
+**Postconditions:**
+- `Element.endX` was set to `endX`.
+- `Element.endY` was set to `endY`.
+- `Element.status` was set to `completed`.
+- The `Element` was associated with the `Canvas`.
+- A `HistoryEntry` instance was created.
+- The `HistoryEntry` was associated with the completed `Element`.
+
+---
+
+## Contract 2: Export PNG
+
+**Operation:**  
+`exportPNG()`
+
+**Cross-references:**  
+Use Case: Export Canvas to PNG Image
+
+**Preconditions:**
+- A `Canvas` exists.
+- The `Canvas` contains at least one `Element`.
+- `ExportSettings` have been selected.
+
+**Postconditions:**
+- An `ExportedImage` instance was created.
+- `ExportedImage.format` was set to `PNG`.
+- `ExportedImage.scale` was set to `ExportSettings.scale`.
+- `ExportedImage.background` was set to `ExportSettings.background`.
+- The `ExportedImage` was associated with the `Canvas`.
+
+---
+
+## Contract 3: Start Collaboration Session
+
+**Operation:**  
+`startSession()`
+
+**Cross-references:**  
+Use Case: Collaborate in Live Room Session
+
+**Preconditions:**
+- A `Canvas` exists and is active.
+- The user has an active internet connection.
+- No `CollaborationSession` is currently active.
+
+**Postconditions:**
+- A `CollaborationSession` instance was created.
+- `CollaborationSession.roomId` was set to a unique room identifier.
+- `CollaborationSession.encryptionKey` was set to a newly generated encryption key.
+- `CollaborationSession.status` was set to `active`.
+- The `CollaborationSession` was associated with the `Canvas`.
+- A `RoomURL` instance was created.
+- The `RoomURL` was associated with the `CollaborationSession`.
